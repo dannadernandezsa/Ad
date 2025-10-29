@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Préstamos | LEKTIA</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+    }
+
+    header {
+      background-color: #7D6D5C;
+      color: white;
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .volver {
+      color: #fff;
+      text-decoration: none;
+      background-color: #9b6b46;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .volver:hover {
+      background-color: #b57a4f;
+    }
+
+    .contenedor {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3215;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #856C54;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f9f1e7;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-aceptar {
+      background-color: #4CAF50;
+    }
+
+    .btn-rechazar {
+      background-color: #e74c3c;
+    }
+
+    .btn-aceptar:hover {
+      background-color: #3e8e41;
+    }
+
+    .btn-rechazar:hover {
+      background-color: #c0392b;
+    }
+
+    footer {
+      background-color: #856C54;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Administración de Préstamos</h1>
+    <a href="{{ url_for('admin') }}" class="volver">⬅ Volver al panel</a>
+  </header>
+
+  <div class="contenedor">
+    <h2>Solicitudes de Préstamo</h2>
+
+    {% if prestamos %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Libro</th>
+          <th>Fecha Solicitud</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in prestamos %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.usuario }}</td>
+          <td>{{ p.libro }}</td>
+          <td>{{ p.fecha_solicitud }}</td>
+          <td>{{ p.estado }}</td>
+          <td>
+            {% if p.estado == "Pendiente" %}
+              <form action="{{ url_for('actualizar_prestamo', id=p.id, accion='aceptar') }}" method="post" style="display:inline;">
+                <button class="btn btn-aceptar" type="submit">Aceptar</button>
+              </form>
+              <form action="{{ url_for('actualizar_prestamo', id=p.id, accion='rechazar') }}" method="post" style="display:inline;">
+                <button class="btn btn-rechazar" type="submit">Rechazar</button>
+              </form>
+            {% else %}
+              <em>{{ p.estado }}</em>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p style="text-align:center; color:#7D6D5C;">No hay solicitudes registradas.</p>
+    {% endif %}
+  </div>
+
+  <footer>
+    © 2025 Biblioteca Palermo - LEKTIA
+  </footer>
+
+</body>
+</html>
